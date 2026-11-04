@@ -1119,10 +1119,10 @@
   <!-- EmailJS -->
   
   <script>
-    // ===== CONTACT FORM → YOUR EMAIL (FormSubmit) =====
-    const MY_EMAIL = 'sbdhivyadharsini.2005@gmail.com';
+       // ===== CONTACT FORM → EMAIL (Web3Forms) =====
+    const ACCESS_KEY = '78d2c4d1-6217-4db6-b708-e01628fb0b5f';
 
-    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    document.getElementById('contactForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const btn = document.getElementById('sendBtn');
       const status = document.getElementById('formStatus');
@@ -1131,22 +1131,21 @@
       status.className = 'form-status';
 
       const payload = {
+        access_key: ACCESS_KEY,
         name: document.getElementById('fromName').value,
         email: document.getElementById('fromEmail').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-        _subject: 'Portfolio message: ' + document.getElementById('subject').value,
-        _template: 'table'
+        subject: 'Portfolio message: ' + document.getElementById('subject').value,
+        message: document.getElementById('message').value
       };
 
       try {
-        const res = await fetch('https://formsubmit.co/ajax/' + MY_EMAIL, {
+        const res = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (res.ok && (data.success === 'true' || data.success === true)) {
+        if (data.success) {
           status.textContent = '✦ Message sent! I\'ll get back to you soon.';
           status.className = 'form-status success';
           this.reset();
@@ -1154,7 +1153,7 @@
           throw new Error(data.message || 'Send failed');
         }
       } catch (err) {
-        status.textContent = '✦ Could not send. Please email me directly.';
+        status.textContent = '✦ Could not send: ' + err.message;
         status.className = 'form-status error';
         console.error('Form error:', err);
       }
